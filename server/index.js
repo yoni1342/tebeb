@@ -9,8 +9,15 @@ const User = require("./models/User");
 const jwt = require('jsonwebtoken')
 const cors = require('cors')
 const schedule = require("node-schedule")
+const Video = require('./models/Video');
+const {yttourl} = require('./utils/youtubeurlgenerator')
 
-
+schedule.scheduleJob('0 */1 * * *', async()=>{
+    const videos =  await Video.find({})
+    videos.map( async (video)=>{
+        await yttourl(video.yturl, video._id)
+    })
+})  
 
 const app = express();
 

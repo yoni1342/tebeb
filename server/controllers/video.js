@@ -7,6 +7,8 @@ const mongoose = require('mongoose')
 const {videoValidation} = require('../utils/validation');
 const ytdl = require('ytdl-core');
 const https = require('https')
+
+const {yttourl} = require('../utils/youtubeurlgenerator')
 module.exports= {
     addvideo: async(req, res, next)=>{
         // Validate The Video Data
@@ -15,13 +17,13 @@ module.exports= {
         
         const {url, playlist_id, grade, title, chapter_number} = req.body
         const playlist = await PlayList.findById(playlist_id)
-        // console.log(playlist)
+        
         if(!playlist) return res.status(404).json({status: "falil", message: "Playlist not found!"})
         let urlExist = false
         let titleExist = false
         
         playlist.chapters[chapter_number-1].videos.map((video)=>{
-            if(video.url == url){
+            if(video.yturl == url){
                 urlExist = true
             }
             if(video.title == title){
@@ -47,7 +49,7 @@ module.exports= {
                 title,
                 grade,
                 playlist_id,
-                url,
+                yturl:url,
                 chapter_number
             })
             await PlayList.findOneAndUpdate({"chapters.number":chapter_number, _id:playlist_id},{
@@ -140,27 +142,36 @@ module.exports= {
         
     },
     playVideo: async(req, res, next)=>{
+
        try{
         const video = await Video.findById(req.params.videoId)
            if(!video) return res.status(404).json({status:"fail", message: "No video has found"})
+        if(!video.url){
            var quality  = "high"
-           ytdl.getInfo(video.url)
-               .then((info)=>{
-                   var formats = info.formats.filter(
-                       (format) => format.hasVideo && format.hasAudio
-                   );
-                   var video =
-                   quality === "lowest" ? formats[formats.findIndex(x=>x.qualityLabel==="360p")] : formats[formats.findIndex(x=>x.qualityLabel==="720p")];
-   
-                   res.setHeader('Content-Type', 'text/html; charset=utf-8');
-                   res.setHeader('Transfer-Encoding', 'chunked');
-                //    console.log(video.url)
-                    res.redirect(video.url);
-                   
-                    // https.get(video.url, (stream) => {
-                    //         stream.pipe(res);
-                    // });
-               })
+            ytdl.getInfo(video.yturl)
+                .then((info)=>{
+                    var formats = info.formats.filter(
+                        (format) => format.hasVideo && format.hasAudio
+                    );
+                    var video =
+                    quality === "lowest" ? formats[formats.findIndex(x=>x.qualityLabel==="360p")] : formats[formats.findIndex(x=>x.qualityLabel==="720p")];
+    
+                    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+                    res.setHeader('Transfer-Encoding', 'chunked');
+                 //    console.log(video.url)
+                     res.redirect(video.url);
+                    
+                     // https.get(video.url, (stream) => {
+                     //         stream.pipe(res);
+                     // });
+                })
+
+        }
+        else{
+            res.redirect(video.url)
+        }
+        //    var quality  = "high"
+        await yttourl(video.yturl, video._id)
        }catch(err){
             res.status(401).json({
                 status: 'fail',

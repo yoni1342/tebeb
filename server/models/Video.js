@@ -12,7 +12,8 @@ const videoSchema = mongoose.Schema({
     },
     url: {
         type: String,
-        unique:true
+        unique:true,
+        default: ""
     },
     grade:{
         type:Number,
