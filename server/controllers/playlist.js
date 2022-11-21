@@ -27,7 +27,8 @@ module.exports= {
     },
     getAllPlaylist: async(req,res,next)=>{
         try{
-            const playlist = await PlayList.find({})
+            const grade = req.body.grade
+            const playlist = await PlayList.find()
             res.status(200).json({
                 status: 'Successfull',
                 result: {

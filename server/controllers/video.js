@@ -7,6 +7,7 @@ const mongoose = require('mongoose')
 const {videoValidation} = require('../utils/validation');
 const ytdl = require('ytdl-core');
 const https = require('https')
+const dns = require('dns')
 
 const {yttourl} = require('../utils/youtubeurlgenerator')
 module.exports= {
@@ -167,8 +168,33 @@ module.exports= {
                 })
 
         }
-        else{
-            res.redirect(video.url)
+        if(video.url){
+            dns.lookup("https://rr8---sn-xuj-5qq6.googlevideo.com/videoplayback?expire=1668702951&ei=hw52Y5GBMpr5xwKTw7XYCg&ip=196.188.180.171&id=o-AN_Har9CJf4VsLf837eJgZ7UpgqucrUDu4lJgHdcjPLw&itag=22&source=youtube&requiressl=yes&mh=dN&mm=31%2C29&mn=sn-xuj-5qq6%2Csn-hju7en7r&ms=au%2Crdu&mv=m&mvi=8&pl=24&initcwndbps=150000&vprv=1&mime=video%2Fmp4&ns=IpSfbfL5EOvNPe9NDWUR4OQJ&cnr=14&ratebypass=yes&dur=1929.090&lmt=1590069642934506&mt=1668680978&fvip=4&fexp=24001373%2C24007246&c=WEB&txp=6211222&n=OtpHpvbj5dFQRQ&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cvprv%2Cmime%2Cns%2Ccnr%2Cratebypass%2Cdur%2Clmt&sig=AOq0QJ8wRgIhAOALJkG9kx43W3A2pqJgSLbtYPqV3vahWYGBCN-Xon2gAiEA95jGc4uGcF9oyPE6JW1Md9XdJuxpAbAxFw4ezzMiqYM%3D&lsparams=mh%2Cmm%2Cmn%2Cms%2Cmv%2Cmvi%2Cpl%2Cinitcwndbps&lsig=AG3C_xAwRgIhAPwiJvSI5aj3v4CXfilVNrAM6iXjWsDVw17KYxc_dAq-AiEAm7Q77TiInJqGc73_UlvUVMakZT4xAgzhfCpAPiNSGWo%3D", (err,value)=>{
+                if(err){
+                    console.log(err)
+                    var quality  = "high"
+                ytdl.getInfo(video.yturl)
+                    .then((info)=>{
+                        var formats = info.formats.filter(
+                            (format) => format.hasVideo && format.hasAudio
+                        );
+                        var video =
+                        quality === "lowest" ? formats[formats.findIndex(x=>x.qualityLabel==="360p")] : formats[formats.findIndex(x=>x.qualityLabel==="720p")];
+        
+                        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+                        res.setHeader('Transfer-Encoding', 'chunked');
+                     //    console.log(video.url)
+                         res.redirect(video.url);
+                        
+                         // https.get(video.url, (stream) => {
+                         //         stream.pipe(res);
+                         // });
+                    })
+                }
+                else{
+                    res.redirect(video.url)
+                }
+            })
         }
         //    var quality  = "high"
         await yttourl(video.yturl, video._id)

@@ -5,6 +5,7 @@ const cookieParser = require("cookie-parser")
 const authRouter = require("./routes/auth")
 const playlistRouter = require('./routes/playlist')
 const videoRouter = require('./routes/video');
+const questionRouter = require('./routes/question');
 const User = require("./models/User");
 const jwt = require('jsonwebtoken')
 const cors = require('cors')
@@ -12,7 +13,7 @@ const schedule = require("node-schedule")
 const Video = require('./models/Video');
 const {yttourl} = require('./utils/youtubeurlgenerator')
 
-schedule.scheduleJob('0 */1 * * *', async()=>{
+schedule.scheduleJob('0 * */1 * *', async()=>{
     const videos =  await Video.find({})
     videos.map( async (video)=>{
         await yttourl(video.yturl, video._id)
@@ -24,7 +25,7 @@ const app = express();
 app.use(cors({origin: true, credentials: true}));
 
 const connect = ()=>{
-    mongoose.connect('mongodb://0.0.0.0:27017/tibeb2').then(()=>{
+    mongoose.connect('mongodb://0.0.0.0:27017/tibeb').then(()=>{
         console.log("Conneted to Mongo")
     }).catch(err=>{throw err})
 }
@@ -48,6 +49,7 @@ app.use(express.json())
 app.use('/api/auth',authRouter)
 app.use('/api/playlist', playlistRouter)
 app.use('/api/video', videoRouter)
+app.use('/api/question', questionRouter)
 
 app.use((err, req, res, next)=>{
     const status = err.status || 500;

@@ -1,7 +1,7 @@
 // /** @type {import('tailwindcss').Config} */
-const withMT = require("@material-tailwind/react/utils/withMT");
 
-module.exports = withMT({
+module.exports = {
+  plugins: [require('@tailwindcss/line-clamp')],
     mode: 'jit',
     purge: ['./src/**/*.{js, jsx,css}'],
     darkMode: false,
@@ -37,6 +37,5 @@ module.exports = withMT({
     variants: {
       extend: {},
     },
-    plugins: [],
   }
-)
+

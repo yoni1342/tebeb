@@ -2,6 +2,7 @@ import Chapter from '../../components/Chapter'
 import { useRouter } from 'next/router'
 import axios from 'axios';
 import { useState ,useEffect } from 'react';
+import Navbar from '../../components/Navbar/Navbar';
 const ISSERVER = typeof window === "undefined";
 
 
@@ -32,17 +33,14 @@ function subject() {
 				}).then((res)=>{
 				  const data = res?.data?.result?.playlist
 				  setData(data)
-				  console.log(data)
 				}).catch((err)=>
 				console.log(err))
 			}
 		}
 	},[query])
 	return (
-		<div className=" min-h-screen bg-gradient-to-t from-[#fbfbf2] to-[#fbfbf2]">
-			<div className="flex items-center p-3 w-52 md:w-48 ">
-				<img src="../logo.svg" />
-			</div>
+		<div className=" min-h-screen">
+			<Navbar />
             <main className=''>
                 
 				{

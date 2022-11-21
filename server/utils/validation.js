@@ -46,5 +46,15 @@ module.exports = {
             thumbnail: Joi.string()
         })
         return schema.validate(data)
+    },
+    questionValidation:(data)=>{
+        const schema = Joi.object({
+            question: Joi.string().required(),
+            answer: Joi.string().required(),
+            options: Joi.array().min(2),
+            video_id:Joi.string(),
+            playlist_id: Joi.string().required()
+        })
+        return schema.validate(data)
     }
 }

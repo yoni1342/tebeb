@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import ReactPlayer from 'react-player'
+import Questions from '../../components/Questions';
 import SideBar from '../../components/SideBar'
 const ISSERVER = typeof window === "undefined";
 
@@ -38,13 +39,19 @@ function video() {
   },[query])
 
   return (
-    <div className=" min-h-screen bg-gradient-to-t from-[#fbfbf2] to-[#fbfbf2] ">
+    <div className=" min-h-screen">
         <div className="flex items-center p-3 w-52 md:w-48 ">
 				<img src="../logo.svg" />
 		</div>
         <main className='lg:flex items-start'>
-            <div className=' lg:flex-[75%] flex items-center justify-center lg:p-10'>
+            <div className=' lg:flex-[75%] flex flex-col justify-center lg:p-10'>
                 <video src={`http://localhost:9000/api/video/${query.id}/play`} controls  className='w-full outline-none' />
+                <div className='py-8 px-2 text-2xl font-semibold text-primary-500'>
+                  {data?.title}
+                </div>
+                <div>
+                  <Questions type="video" id= {data?._id}/>
+                </div>
             </div>
             <div className='lg:flex-[25%]'>
                 <SideBar playlist_id = {data?.playlist_id}/>

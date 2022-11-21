@@ -5,7 +5,6 @@ import SidebarVideo from './SidebarVideo'
 const ISSERVER = typeof window === "undefined";
 
 function SideBar({playlist_id}) {
-  console.log(playlist_id)
   const [data, setData] = useState([])
   useEffect(()=>{
 		if(!ISSERVER){
@@ -28,7 +27,6 @@ function SideBar({playlist_id}) {
       }).then((res)=>{
         const data = res?.data?.result?.playlist
         setData(data)
-        console.log(data)
       }).catch((err)=>
       console.log(err))
 			
@@ -39,7 +37,7 @@ function SideBar({playlist_id}) {
       {
         data?.chapters?.map((chap)=>(
         <div className='pt-10'> 
-          <p><span>Chapter {chap.number}</span> {chap.title
+          <p  className='text-primary-500 text-lg font-bold pl-3'><span>Chapter {chap.number}</span> {chap.title
 }</p> 
           <div className='pl-5 lg:pl-0 flex flex-col justify-center items-center'>
                 {
