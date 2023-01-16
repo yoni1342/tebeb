@@ -1,6 +1,6 @@
 import Chapter from '../../components/Chapter'
 import { useRouter } from 'next/router'
-import axios from 'axios';
+import {axios} from '../../axios';
 import { useState ,useEffect } from 'react';
 import Navbar from '../../components/Navbar/Navbar';
 const ISSERVER = typeof window === "undefined";
@@ -28,7 +28,7 @@ function subject() {
 			  'access_token': token
 			}
 			if(router.isReady){
-				axios.get(`http://localhost:9000/api/playlist/${query.id}/`,{
+				axios.get(`/playlist/${query.id}/`,{
 				  headers: headers
 				}).then((res)=>{
 				  const data = res?.data?.result?.playlist

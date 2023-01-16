@@ -1,9 +1,11 @@
-import axios from 'axios';
+// import axios from 'axios';
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import ReactPlayer from 'react-player'
-import Questions from '../../components/Questions';
+import Questions from '../../components/Question/Questions';
 import SideBar from '../../components/SideBar'
+import Navbar from '../../components/Navbar/Navbar'
+import {axios} from '../../axios'
 const ISSERVER = typeof window === "undefined";
 
 function video() {
@@ -27,7 +29,7 @@ function video() {
 			  'access_token': token
 			}
       if(router.isReady){
-        axios.get(`http://localhost:9000/api/video/${query.id}`,{
+        axios.get(`/video/${query.id}`,{
           headers:headers
         }).then((res)=>{
 				  const data = res?.data?.result?.video
@@ -40,13 +42,11 @@ function video() {
 
   return (
     <div className=" min-h-screen">
-        <div className="flex items-center p-3 w-52 md:w-48 ">
-				<img src="../logo.svg" />
-		</div>
+        <Navbar />
         <main className='lg:flex items-start'>
             <div className=' lg:flex-[75%] flex flex-col justify-center lg:p-10'>
-                <video src={`http://localhost:9000/api/video/${query.id}/play`} controls  className='w-full outline-none' />
-                <div className='py-8 px-2 text-2xl font-semibold text-primary-500'>
+                <video src={`http://localhost:9000/api/video/${query.id}/play`} controls  className='outline-none' />
+                <div className='py-8 px-2 text-xl md:text-2xl font-semibold text-primary-500'>
                   {data?.title}
                 </div>
                 <div>
@@ -54,7 +54,7 @@ function video() {
                 </div>
             </div>
             <div className='lg:flex-[25%]'>
-                <SideBar playlist_id = {data?.playlist_id}/>
+                <SideBar playlist_id = {data?.playlist_id} video_id = {query.id}/>
             </div>
         </main>
     </div>

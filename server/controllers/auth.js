@@ -1,4 +1,3 @@
-const mongoonse = require("mongoose")
 const User = require('../models/User')
 const bcrypt = require("bcrypt");
 const createError = require("../error");
@@ -27,16 +26,15 @@ module.exports =
         const {password, ...others} = newUser._doc
         // send Verification Email
         jwt.sign({id : newUser._id}, process.env.JWT, {expiresIn: '1h'}, (err, emailToken)=>{
-            const url = `http://localhost:${process.env.PORT}/confirmation/${emailToken}`;
+            const url = `${process.env.SERVER_BASE_URL}/confirmation/${emailToken}`;
 
             transporter.sendMail({
                 from: 'yonatantesfaye30@gmail.com',
                 to: newUser.email,
                 subject: "Verifiy yor email",
-                html:  `Please click this email to confirm your email: <a href="${url}">${url}</a>`
+                html:  `Please click this email to confirm your email: <a href="${url}">using this LINK</a>`
             })
         })
-
 
         return res.status(200).json({message: others})
     }catch(err){
@@ -66,6 +64,20 @@ signin : async (req, res, next)=>{
         }catch(err){
             next(err)
         }
-} 
+},
+confirmation : async(req, res, next)=>{
+    try{
+        const verfied = jwt.verify(req.params.token, process.env.JWT)
+        const user = await User.findById(verfied.id)
+        if(!user) return res.status(400).json({status:"fail", message:"Invalid Token"})
+        await User.findByIdAndUpdate(verfied.id, {
+            $set:{verified:true}
+        })
+
+        return res.redirect(`${process.env.CLIENT_BASE_URL}/signin`)
+    }catch(err){
+        next(err)
+    }
+}
 
 }

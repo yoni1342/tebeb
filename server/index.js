@@ -1,6 +1,6 @@
 const express = require("express");
+const color = require("colors")
 require("dotenv").config()
-const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser")
 const authRouter = require("./routes/auth")
 const playlistRouter = require('./routes/playlist')
@@ -12,6 +12,7 @@ const cors = require('cors')
 const schedule = require("node-schedule")
 const Video = require('./models/Video');
 const {yttourl} = require('./utils/youtubeurlgenerator')
+const {connect_db} = require('./config/db')
 
 schedule.scheduleJob('0 * */1 * *', async()=>{
     const videos =  await Video.find({})
@@ -24,26 +25,9 @@ const app = express();
 
 app.use(cors({origin: true, credentials: true}));
 
-const connect = ()=>{
-    mongoose.connect('mongodb://0.0.0.0:27017/tibeb').then(()=>{
-        console.log("Conneted to Mongo")
-    }).catch(err=>{throw err})
-}
 
-app.get('/confirmation/:token', async(req, res)=>{
-    try{
-        const verfied = jwt.verify(req.params.token, process.env.JWT)
-        const user = await User.findById(verfied.id)
-        if(!user) return res.status(400).json({status:"fail", message:"Invalid Token"})
-        await User.findByIdAndUpdate(verfied.id, {
-            $set:{verified:true}
-        })
 
-        return res.redirect(`http://localhost:3000/signin`)
-    }catch(err){
-        res.send(err)
-    }
-})
+app.use('/confirmation', authRouter)
 app.use(cookieParser())
 app.use(express.json())
 app.use('/api/auth',authRouter)
@@ -63,6 +47,6 @@ app.use((err, req, res, next)=>{
 
 
 app.listen(process.env.PORT, ()=>{
-    connect()
+    connect_db()
     console.log("server is runing")
 })

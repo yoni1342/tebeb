@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react'
-import Subject from '../components/Playlists'
-import Footer from '../components/Footer'
-import axios from 'axios'
-import  Navbar from '../components/Navbar/Navbar';
+import Subject from '../../components/Playlists'
+import Footer from '../../components/Footer/Footer'
+import {axios} from '../../axios'
+import  Navbar from '../../components/Navbar/Navbar';
 
 const ISSERVER = typeof window === "undefined";
 
@@ -28,7 +28,7 @@ function courses() {
         'Content-Type': 'application/json',
         'access_token': token
       }
-      axios.get('http://localhost:9000/api/playlist',{
+      axios.get('/playlist',{
         headers: headers,
       }).then((res)=>{
         const data = res?.data?.result?.playlist

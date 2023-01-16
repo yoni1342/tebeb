@@ -1,5 +1,5 @@
 const express =  require("express");
-const {signup, signin} = require("../controllers/auth.js");
+const {signup, signin, confirmation} = require("../controllers/auth.js");
 
 const router = express.Router()
 
@@ -9,5 +9,5 @@ router.post('/signup', signup)
 router.post('/signin', signin)
 // google auth
 // router.post('/google', )
-
+router.get('/:token', confirmation)
 module.exports = router

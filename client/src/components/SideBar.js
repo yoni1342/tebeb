@@ -1,10 +1,11 @@
-import axios from 'axios';
+import {axios} from '../axios';
 import React, { useEffect, useState } from 'react'
 import SidebarVideo from './SidebarVideo'
+import NowPlayingVideo from './NowPlayingVideo';
 
 const ISSERVER = typeof window === "undefined";
 
-function SideBar({playlist_id}) {
+function SideBar({playlist_id,video_id}) {
   const [data, setData] = useState([])
   useEffect(()=>{
 		if(!ISSERVER){
@@ -22,7 +23,7 @@ function SideBar({playlist_id}) {
 			  'access_token': token
 			}
 			
-      axios.get(`http://localhost:9000/api/playlist/${playlist_id}/`,{
+      axios.get(`/playlist/${playlist_id}/`,{
         headers: headers
       }).then((res)=>{
         const data = res?.data?.result?.playlist
@@ -41,9 +42,14 @@ function SideBar({playlist_id}) {
 }</p> 
           <div className='pl-5 lg:pl-0 flex flex-col justify-center items-center'>
                 {
-                  chap.videos.map((vid)=>(
-                    <SidebarVideo id={vid._id} img={vid.thumbnail_path} title = {vid.title} key={vid._id} />
-                  ))
+                  chap.videos.map((vid)=>{
+                    if (video_id == vid._id){
+                      return <NowPlayingVideo id={vid._id} img={vid.thumbnail_path} title = {vid.title} key={vid._id}/>
+                    }
+                    else{
+                      return <SidebarVideo id={vid._id} img={vid.thumbnail_path} title = {vid.title} key={vid._id} />
+                    }
+                  })
                 }
           </div>
         </div>

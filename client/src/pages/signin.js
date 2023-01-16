@@ -2,7 +2,7 @@ import React from 'react';
 import {AiOutlineMail} from 'react-icons/ai'
 import {RiLockPasswordLine} from 'react-icons/ri'
 import { useState } from 'react';
-import axios from 'axios';
+import {axios} from '../axios';
 import useLocalStorage from '../hooks/useLocalStorage'
 
 
@@ -18,7 +18,7 @@ function signin() {
 	}
 	const submit = (e)=>{
 		e.preventDefault()
-		axios.post("http://localhost:9000/api/auth/signin",data)
+		axios.post("/auth/signin",data)
 			.then((res)=>{
 				console.log(res)
 				setUser(res.data)

@@ -20,10 +20,7 @@ const questionSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Video',
     },
-    user_answer: {
-        type: "String",
-        default: "Not_Entered"
-    },
+
     playlist_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'PlayList',

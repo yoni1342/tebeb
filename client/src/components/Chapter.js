@@ -2,35 +2,9 @@ import React, { useEffect, useState } from 'react'
 import Thumbnail from './Thumbnail'
 import  { Component } from "react";
 import Slider from "react-slick";
-import axios from 'axios';
 const ISSERVER = typeof window === "undefined";
 
 export default function Chapter({number, title, videos}) {
-
-  // const [video, setVideo] = useState([])
-    // useEffect(()=>{
-    //   videos.map((video)=>{
-    //     if(!ISSERVER){
-    //       const user  = localStorage.getItem("user")
-    //       const token = JSON.parse(user).token
-          
-    //       const headers = {
-    //         'Content-Type': 'application/json',
-    //         'access_token': token
-    //       }
-          
-    //       axios.get(`http://localhost:9000/api/video/${video}`,{
-    //         headers: headers
-    //       }).then((res)=>{
-    //         const data = res?.data?.result?.video
-    //         setVideo(prev=>[...prev, data])
-    //       }).catch((err)=>
-    //       console.log(err))
-          
-    //     }
-    //   })
-    // },[videos])
-    // console.log(video)
         const settings = {
             dots: true,
             infinite: false,

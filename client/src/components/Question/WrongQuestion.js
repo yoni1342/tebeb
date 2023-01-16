@@ -1,0 +1,47 @@
+import React from 'react'
+import { useSelector } from 'react-redux'
+
+
+function WrongQuestion({question, options, index, id}) {
+    const questionState = useSelector((state) => state)
+  return (
+    <div className='py-3 px-4 bg-red-200 mb-3'> 
+            {/* question */}
+            <div>
+                <p className='text-2xl font-light tracking-wider text-black capitalize'>
+                    {index+1} &#183; {question}
+                </p>
+            </div>
+            {/* choise */}
+            <div className='space-y-3 py-4 px-3'> 
+                {
+                    options.map((option)=>(
+                    <div className='flex space-x-3 items-center'>
+                        {
+                            questionState[id] == option?(
+
+                                <input type="radio" name={index} id={index} value = {index} checked  className="w-6 h-6"/>
+                            ):(
+                                <input type="radio" name={index} id={index} value = {index} disabled className="w-6 h-6" />
+                            )
+                        }   
+                        <label for={index} className='text-black text-xl'>
+                            {option}
+                        </label>
+                    </div>
+                    ))
+                }
+            </div>
+            <div className=''>
+                <h2 className='text-2xl text-primary-800 underline'>
+                    Explanation
+                </h2>
+                <p className='pl-3 pt-3 w-[90%]'>
+                    localhostlocalhostlocalhost localhostlocalhostlocal hostlocalhostlocalhost localhostlocalhostlo calhostlocalhost localhostlocalh ostlocalhostlocalhost localhostl ocalhostlocalhostlocalhostlo calhostlocalhostlocalhost
+                </p>
+            </div>  
+        </div>
+  )
+}
+
+export default WrongQuestion

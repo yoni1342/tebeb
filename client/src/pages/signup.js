@@ -2,8 +2,9 @@ import {AiOutlineUser,AiOutlineMail} from 'react-icons/ai'
 import {BsTelephone} from 'react-icons/bs'
 import {MdOutlineGrade} from 'react-icons/md'
 import {RiLockPasswordLine} from 'react-icons/ri'	
-import axios from 'axios'
+import {axios} from '../axios'
 import { useState } from 'react';
+import Navbar from '../components/Navbar/HomeNav'
 function signup() {
 	const [data, setData] = useState('') 
 	const [fname, setFname] = useState('')
@@ -24,7 +25,7 @@ function signup() {
 				password,
 				grade
 			}
-			axios.post('http://localhost:9000/api/auth/signup',data).then((res)=>{
+			axios.post('/auth/signup',data).then((res)=>{
 				window.location.replace('/checkemail')
 			}).catch((err)=>{
 				console.log(err?.response?.data?.message)
@@ -35,10 +36,8 @@ function signup() {
 	}
 
 	return (
-		<div className=" min-h-screen bg-gradient-to-t from-[#fbfbf2] to-[#fbfbf2] pb-10">
-			<div className="flex items-center p-3 w-52 md:w-48 ">
-				<img src="./logo.svg" />
-			</div>
+		<div className=" min-h-screen bg-gradient-to-t	 pb-10">
+			<Navbar />
 			<div className='flex flex-col justify-center items-center space-y-10'>
 				<h1 className='font-bold text-2xl md:text-3xl lg:text-4xl xl:5xl text-primary-500 pt-10 pl-2'>Create New Account</h1>
 				{

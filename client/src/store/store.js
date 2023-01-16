@@ -1,17 +1,21 @@
-import { HYDRATE, createWrapper } from 'next-redux-wrapper'
-import user from './userSlice'
+import { configureStore } from '@reduxjs/toolkit'
+import questionReducer from './slices/questionSlice'
+import storage from 'redux-persist/lib/storage';
+import { persistReducer, persistStore } from 'redux-persist';
+import thunk from 'redux-thunk';
+import storageSession from 'reduxjs-toolkit-persist/lib/storage/session'
 
-
-const masterReducer = (state, action) => {
-    if (action.type === HYDRATE) {
-        const nextState = {
-            ...state, // use previous state
-            user: {
-                user: action.payload.user.user
-            }
-        }
-        return nextState;
-    } else {
-    return combinedReducer(state, action)
-  }
+const persistConfig = {
+  key: 'root',
+  storage,
 }
+const persistedReducer = persistReducer(persistConfig, questionReducer)
+
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  devTools: process.env.NODE_ENV !== 'production',
+  middleware: [thunk]
+})
+
+export const persistor = persistStore(store)

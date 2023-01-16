@@ -8,7 +8,7 @@ const ResultSchema = mongoonse.Schema({
     },
     result:{
         type: [{
-            question_id:{
+            question_id:{   
                 type: mongoonse.Schema.Types.ObjectId,
                 ref: "Question",
                 required: true
